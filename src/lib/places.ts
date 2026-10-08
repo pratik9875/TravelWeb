@@ -31,6 +31,19 @@ export async function getPlaces(type: Place["type"], city: string) {
   return (data ?? []) as Place[];
 }
 
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+export async function getPlace(id: string) {
+  if (!UUID.test(id)) return null;
+  const { data } = await supabase.from("places").select("*").eq("id", id).maybeSingle();
+  return (data as Place | null) ?? null;
+}
+
+export async function getAllPlaceIds() {
+  const { data } = await supabase.from("places").select("id");
+  return (data ?? []).map((r) => r.id as string);
+}
+
 export async function getCities() {
   const { data } = await supabase.from("places").select("city, type");
   const seen = new Map<string, Set<Place["type"]>>();

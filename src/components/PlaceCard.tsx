@@ -1,9 +1,18 @@
+import Link from "next/link";
 import type { Place } from "@/lib/places";
 
 export default function PlaceCard({ p }: { p: Place }) {
   return (
     <div className="border rounded-lg p-4 mb-3">
-      <h2 className="font-semibold">{p.name}</h2>
+      {p.photos[0] && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={p.photos[0]} alt={p.name} className="h-40 w-full object-cover rounded mb-2" />
+      )}
+      <h2 className="font-semibold">
+        <Link href={`/place/${p.id}`} className="hover:underline">
+          {p.name}
+        </Link>
+      </h2>
       {p.why_we_picked && <p className="text-sm text-gray-600">{p.why_we_picked}</p>}
       {p.price_min != null && (
         <p className="text-sm">
